@@ -1,30 +1,45 @@
-from flask import Flask
+name: Docker Build and Deploy to AWS
 
-app = Flask(__name__)
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-@app.route('/')
-def hello():
-    return "Hello world from Python app!\nAWS test\nCI/CD is working!\n Testing Auto build and deploy to Aws"
-
-@app.route('/health')
-def health():
-    return "Status: Healthy\n"
-
-@app.route('/version')
-def version():
-    return "Version: 1.0.0\nBuild: DevOps Pipeline\n"
-
-@app.route('/about')
-def about():
-    return "DevOps Learning Project\nPython Flask + Docker + GitHub Actions + AWS\n"
-
-@app.route('/status')
-def status():
-    return "Server is running on dev branch!\n"
-
-@app.route('/deploy')
-def deploy():
-    return "Auto-deployed from GitHub Actions to AWS ECS!\n"
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+      if: github.event_name == 'push'
+      
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+      if: github.event_name == 'push'
+      
+    - name: Build, tag, and push image to Amazon ECR
+      if: github.event_name == 'push'
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: hello-devops
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        
+    - name: Deploy to ECS
+      if: github.event_name == 'push'
+      run: |
+        aws ecs update-service --cluster hello-devops-cluster --service hello-devops-service --force-new-deployment --region us-east-1
