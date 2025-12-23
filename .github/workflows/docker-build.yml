@@ -3,6 +3,8 @@ name: Docker Build and Push
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
@@ -17,10 +19,12 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # Only login for pushes to main, not PRs
+      if: github.event_name == 'push'
     
-    - name: Build and push Docker image
+    - name: Build Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
-        push: true
+        push: ${{ github.event_name == 'push' }}
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-devops:latest,${{ secrets.DOCKERHUB_USERNAME }}/hello-devops:${{ github.sha }}
