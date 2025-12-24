@@ -1,22 +1,182 @@
 version: "1.0"
 
+# Use the latest Python linter
+linter: jetbrains/qodana-python:2024.1
+
+# Fail on ANY issues found
+failThreshold: 0
+
+# Profile selection - use the strictest
 profile:
   name: qodana.recommended
 
-linter: jetbrains/qodana-python:latest
-
+# Enable ALL inspections at maximum severity
+inspections:
+  # Python Code Quality
+  PyPep8Inspection:
+    enabled: true
+  PyPep8NamingInspection:
+    enabled: true
+  PyUnresolvedReferencesInspection:
+    enabled: true
+  PyTypeCheckerInspection:
+    enabled: true
+  PyShadowingBuiltinsInspection:
+    enabled: true
+  PyShadowingNamesInspection:
+    enabled: true
+  PyArgumentListInspection:
+    enabled: true
+  PyCallingNonCallableInspection:
+    enabled: true
+  PyBroadExceptionInspection:
+    enabled: true
+  PyExceptClausesOrderInspection:
+    enabled: true
+  PyUnboundLocalVariableInspection:
+    enabled: true
+  PyStatementEffectInspection:
+    enabled: true
+  PyUnreachableCodeInspection:
+    enabled: true
+  PyProtectedMemberInspection:
+    enabled: true
+  PyMethodMayBeStaticInspection:
+    enabled: true
+  PyClassHasNoInitInspection:
+    enabled: true
+  PyAbstractClassInspection:
+    enabled: true
+  
+  # Dangerous defaults
+  PyDefaultArgumentInspection:
+    enabled: true
+  PyDictCreationInspection:
+    enabled: true
+  PyListCreationInspection:
+    enabled: true
+  
+  # Unused code
+  PyUnusedLocalInspection:
+    enabled: true
+  PyUnusedFunctionInspection:
+    enabled: true
+  PyUnusedParameterInspection:
+    enabled: true
+  PyUnusedImportInspection:
+    enabled: true
+  
+  # Security-related
+  PyInterpreterInspection:
+    enabled: true
+  PySingleQuotedDocstringInspection:
+    enabled: true
+  PyMissingConstructorInspection:
+    enabled: true
+  
+  # Code style
+  PyPep8Inspection:
+    enabled: true
+    options:
+      - "--max-line-length=100"
+      - "--ignore=E501"
+  
+  # Documentation
+  PyMissingTypeHintsInspection:
+    enabled: true
+  PyDocstringTypesInspection:
+    enabled: true
+  
+  # Compatibility
+  PyCompatibilityInspection:
+    enabled: true
+  
+  # Redundant code
+  PyRedundantParenthesesInspection:
+    enabled: true
+  PySimplifyBooleanCheckInspection:
+    enabled: true
+  PyComparisonWithNoneInspection:
+    enabled: true
+  
+  # String issues
+  PyStringFormatInspection:
+    enabled: true
+  PyStringExceptionInspection:
+    enabled: true
+  
+  # Dict/List issues
+  PyDictDuplicateKeysInspection:
+    enabled: true
+  
+  # Docker inspections
+  DockerFileRunCommandInspection:
+    enabled: true
+  DockerFileFromAliasInspection:
+    enabled: true
+  DockerFileAddInspection:
+    enabled: true
+  DockerFileCopyMultipleFilesToFileInspection:
+    enabled: true
+  DockerFileExposePortInspection:
+    enabled: true
+  DockerFileYumInstallCleanupInspection:
+    enabled: true
+  DockerFileAptGetInstallCleanupInspection:
+    enabled: true
+  
+  # General inspections
+  SpellCheckingInspection:
+    enabled: true
+  TodoCommentInspection:
+    enabled: true
+  
+# Exclude only essential paths
 exclude:
   - name: All
     paths:
+      - .git
+      - .github
       - venv
       - .venv
       - __pycache__
+      - "*.pyc"
+      - .pytest_cache
 
+# Include everything else
 include:
-  - name: PythonSecurity
-  - name: PythonBestPractices
-  - name: DockerfileInspections
+  - name: All
 
-failThreshold: 10  # Fail if more than 10 critical issues
+# Set Python version
+python:
+  languageLevel: "3.11"
 
-projectJDK: "Python 3.11"
+# License audit (check dependencies)
+dependencyOverride:
+  licenses:
+    allow:
+      - MIT
+      - Apache-2.0
+      - BSD-3-Clause
+      - BSD-2-Clause
+    deny:
+      - GPL-3.0
+      - AGPL-3.0
+
+# Code coverage requirements
+coverage:
+  required: 80  # Require 80% code coverage
+
+# Baseline - track improvements
+baseline: qodana.sarif.json
+
+# Run in CI mode
+bootstrap: |
+  pip install -r requirements.txt
+
+# Report format
+report:
+  # Generate SARIF for GitHub
+  sarif: true
+  # Generate HTML report
+  html: true
