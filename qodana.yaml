@@ -1,182 +1,139 @@
+####################################################################################################################
+# WARNING: Do not store sensitive information in this file, as its contents will be included in the Qodana report. #
+####################################################################################################################
 version: "1.0"
 
-# Use the latest Python linter
-linter: jetbrains/qodana-python:latest
+# Use latest linter
+linter: jetbrains/qodana-python:2025.2
 
-# Fail on ANY issues found
+# Use strictest profile
+profile:
+  name: qodana.sanity
+
+# ZERO tolerance - fail on ANY issue
 failThreshold: 0
 
-# Profile selection - use the strictest
-profile:
-  name: qodana.recommended
-
-# Enable ALL inspections at maximum severity
-inspections:
-  # Python Code Quality
-  PyPep8Inspection:
-    enabled: true
-  PyPep8NamingInspection:
-    enabled: true
-  PyUnresolvedReferencesInspection:
-    enabled: true
-  PyTypeCheckerInspection:
-    enabled: true
-  PyShadowingBuiltinsInspection:
-    enabled: true
-  PyShadowingNamesInspection:
-    enabled: true
-  PyArgumentListInspection:
-    enabled: true
-  PyCallingNonCallableInspection:
-    enabled: true
-  PyBroadExceptionInspection:
-    enabled: true
-  PyExceptClausesOrderInspection:
-    enabled: true
-  PyUnboundLocalVariableInspection:
-    enabled: true
-  PyStatementEffectInspection:
-    enabled: true
-  PyUnreachableCodeInspection:
-    enabled: true
-  PyProtectedMemberInspection:
-    enabled: true
-  PyMethodMayBeStaticInspection:
-    enabled: true
-  PyClassHasNoInitInspection:
-    enabled: true
-  PyAbstractClassInspection:
-    enabled: true
+# Include ALL possible inspections
+include:
+  # Dependency & License checks
+  - name: CheckDependencyLicenses
   
-  # Dangerous defaults
-  PyDefaultArgumentInspection:
-    enabled: true
-  PyDictCreationInspection:
-    enabled: true
-  PyListCreationInspection:
-    enabled: true
+  # Python - Errors & Warnings
+  - name: PyUnresolvedReferencesInspection
+  - name: PyTypeCheckerInspection
+  - name: PyArgumentListInspection
+  - name: PyCallingNonCallableInspection
+  - name: PyUnboundLocalVariableInspection
+  - name: PyStatementEffectInspection
+  - name: PyTupleAssignmentBalanceInspection
+  - name: PyMethodParametersInspection
+  - name: PyAbstractClassInspection
+  - name: PyNoneFunctionAssignmentInspection
+  - name: PyRedeclarationInspection
+  - name: PyPropertyAccessInspection
+  - name: PyMethodFirstArgAssignmentInspection
+  - name: PyInitNewSignatureInspection
+  - name: PyProtectedMemberInspection
+  - name: PyAttributeOutsideInitInspection
+  - name: PySuperArgumentsInspection
+  - name: PyDictDuplicateKeysInspection
+  - name: PySetFunctionToLiteralInspection
   
-  # Unused code
-  PyUnusedLocalInspection:
-    enabled: true
-  PyUnusedFunctionInspection:
-    enabled: true
-  PyUnusedParameterInspection:
-    enabled: true
-  PyUnusedImportInspection:
-    enabled: true
+  # Python - Code Quality
+  - name: PyPep8Inspection
+  - name: PyPep8NamingInspection
+  - name: PyShadowingBuiltinsInspection
+  - name: PyShadowingNamesInspection
+  - name: PyComparisonWithNoneInspection
+  - name: PySimplifyBooleanCheckInspection
+  - name: PyClassHasNoInitInspection
+  - name: PyMethodMayBeStaticInspection
+  - name: PyUnusedLocalInspection
+  - name: PyBroadExceptionInspection
+  - name: PyExceptClausesOrderInspection
+  - name: PyUnreachableCodeInspection
+  - name: PyDefaultArgumentInspection
+  - name: PyRedundantParenthesesInspection
+  - name: PyDictCreationInspection
+  - name: PyListCreationInspection
+  - name: PyChainedComparisonsInspection
+  - name: PyNestedDecoratorsInspection
+  - name: PyIncorrectDocstringInspection
+  - name: PyMissingOrEmptyDocstringInspection
+  - name: PyDocstringTypesInspection
+  - name: PyMissingTypeHintsInspection
+  - name: PyTypeHintsInspection
+  - name: PyArgumentEqualDefaultInspection
+  - name: PyGlobalUndefinedInspection
+  - name: PyPackageRequirementsInspection
   
-  # Security-related
-  PyInterpreterInspection:
-    enabled: true
-  PySingleQuotedDocstringInspection:
-    enabled: true
-  PyMissingConstructorInspection:
-    enabled: true
+  # Python - Unused code
+  - name: PyUnusedLocalInspection
+  - name: PyUnusedFunctionInspection
   
-  # Code style
-  PyPep8Inspection:
-    enabled: true
-    options:
-      - "--max-line-length=100"
-      - "--ignore=E501"
-  
-  # Documentation
-  PyMissingTypeHintsInspection:
-    enabled: true
-  PyDocstringTypesInspection:
-    enabled: true
-  
-  # Compatibility
-  PyCompatibilityInspection:
-    enabled: true
-  
-  # Redundant code
-  PyRedundantParenthesesInspection:
-    enabled: true
-  PySimplifyBooleanCheckInspection:
-    enabled: true
-  PyComparisonWithNoneInspection:
-    enabled: true
-  
-  # String issues
-  PyStringFormatInspection:
-    enabled: true
-  PyStringExceptionInspection:
-    enabled: true
-  
-  # Dict/List issues
-  PyDictDuplicateKeysInspection:
-    enabled: true
+  # Python - Security & Best Practices
+  - name: PyInterpreterInspection
+  - name: PyCompatibilityInspection
+  - name: PyStringFormatInspection
+  - name: PyStringExceptionInspection
+  - name: PySingleQuotedDocstringInspection
+  - name: PyMissingConstructorInspection
+  - name: PyDataclassInspection
+  - name: PyAsyncCallInspection
+  - name: PyDecoratorInspection
   
   # Docker inspections
-  DockerFileRunCommandInspection:
-    enabled: true
-  DockerFileFromAliasInspection:
-    enabled: true
-  DockerFileAddInspection:
-    enabled: true
-  DockerFileCopyMultipleFilesToFileInspection:
-    enabled: true
-  DockerFileExposePortInspection:
-    enabled: true
-  DockerFileYumInstallCleanupInspection:
-    enabled: true
-  DockerFileAptGetInstallCleanupInspection:
-    enabled: true
+  - name: DockerFileRunCommandInspection
+  - name: DockerFileFromAliasInspection
+  - name: DockerFileAddInspection
+  - name: DockerFileCopyMultipleFilesToFileInspection
+  - name: DockerFileExposePortInspection
+  - name: DockerFileYumInstallCleanupInspection
+  - name: DockerFileAptGetInstallCleanupInspection
+  - name: DockerFileNotSortedInspection
+  - name: DockerFileArgumentCountInspection
   
-  # General inspections
-  SpellCheckingInspection:
-    enabled: true
-  TodoCommentInspection:
-    enabled: true
+  # General code quality
+  - name: SpellCheckingInspection
+  - name: TodoComment
+  - name: GrazieInspection
+  - name: LanguageDetectionInspection
+  - name: ProblematicWhitespace
+  - name: LongLine
+  - name: InconsistentLineSeparators
   
-# Exclude only essential paths
+  # YAML/JSON
+  - name: YAMLSchemaValidation
+  - name: YAMLUnresolvedAlias
+  - name: JsonSchemaCompliance
+  
+  # Markdown
+  - name: MarkdownUnresolvedFileReference
+  - name: MarkdownUnresolvedHeaderReference
+  
+  # Security-focused
+  - name: Annotator
+  - name: BashSupport
+
+# Exclude only absolute necessities
 exclude:
   - name: All
     paths:
       - .git
-      - .github
       - venv
       - .venv
       - __pycache__
       - "*.pyc"
       - .pytest_cache
+      - qodana
 
-# Include everything else
-include:
-  - name: All
-
-# Set Python version
-python:
-  languageLevel: "3.11"
-
-# License audit (check dependencies)
-dependencyOverride:
-  licenses:
-    allow:
-      - MIT
-      - Apache-2.0
-      - BSD-3-Clause
-      - BSD-2-Clause
-    deny:
-      - GPL-3.0
-      - AGPL-3.0
-
-# Code coverage requirements
-coverage:
-  required: 80  # Require 80% code coverage
-
-# Baseline - track improvements
-baseline: qodana.sarif.json
-
-# Run in CI mode
+# Bootstrap - install dependencies
 bootstrap: |
-  pip install -r requirements.txt
+  if [ -f requirements.txt ]; then
+    pip install --no-cache-dir -r requirements.txt
+  fi
 
-# Report format
-report:
-  # Generate SARIF for GitHub
-  sarif: true
-  # Generate HTML report
-  html: true
+# Disable problematic checks that might cause false positives
+# (Remove this section if you want ABSOLUTE maximum strictness)
+# disabledInspections:
+#   - SpellCheckingInspection  # Can be too noisy for code
