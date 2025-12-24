@@ -1,7 +1,7 @@
 version: "1.0"
 
 # Use the latest Python linter
-linter: jetbrains/qodana-python:2024.1
+linter: jetbrains/qodana-python:latest
 
 # Fail on ANY issues found
 failThreshold: 0
