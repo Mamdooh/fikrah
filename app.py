@@ -173,7 +173,7 @@ def handle_exception(error):
 
 @app.route('/')
 def hello():
-    return f"Hello from {request.user_country}!\nWelcome to our DevOps monitoring demo!\n"
+    return f"Hello from {request.user_country}!\nWelcome to our DevOps monitoring demo!\n Trigger 3:38pm"
 
 @app.route('/health')
 def health():
