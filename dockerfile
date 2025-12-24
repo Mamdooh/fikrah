@@ -2,8 +2,8 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install Flask
-RUN pip install flask
+# Install Flask and Prometheus client
+RUN pip install flask prometheus-client
 
 COPY app.py .
 
